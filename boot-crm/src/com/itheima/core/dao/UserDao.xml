@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.core.dao.UserDao">
+	<!-- 根据id查询客户信息 -->
+	<select id="findUser" parameterType="String" resultType="user">
+		select * from user where user_code = #{usercode} and user_password = #{password} and user_State = '1'
+	</select>
+	<select id="findUserCar" parameterType="user" resultType="user">
+		select * from buy,car where car.user_id = #{user_id} and car.b_id = buy.b_id and car.l_id = 0;
+	</select>
+	<select id="findUserOldCar" parameterType="user" resultType="user">
+		select * from car where car.user_id = #{user_id} and car.l_id = 0 and car.b_id = #{id}
+	</select>
+	<select id="findMine" parameterType="Integer" resultType="user">
+		select * from user where user_id = #{user_id}
+	</select>
+	<select id="findMySell" parameterType="Integer" resultType="user">
+		select * from user,buy where user_id = #{user_id} and user.user_id = buy.u_id
+		<if test="start != null and rows != null">
+			limit #{start},#{rows}
+		</if>
+	</select>
+	<select id="findMySellCount" parameterType="user" resultType="Integer">
+		select count(*) from buy,user where user_id = #{user_id} and user.user_id = buy.u_id
+	</select>
+	<update id="changeUserpwd" parameterType="user">
+		update user set user_password = #{pwd} where user_id = #{user_id}
+	</update>
+	<update id="changeUsertel" parameterType="user">
+		update user set user_code = #{tel} where user_id = #{user_id}
+	</update>
+	<insert id="adduser" parameterType="user">
+		insert into user (user_name, user_code, user_password, user_State, user_money) 
+				value(#{username}, #{usercode}, #{upwd}, #{user_State}, 0)
+	</insert>
+	<select id="findpwdUser" parameterType="user" resultType="user">
+		select * from user where user_code = #{usercode} and user_name = #{username}
+	</select>
+	<update id="findpwd" parameterType="user">
+		update user set user_password = #{upwd} where user_code = #{usercode}
+	</update>
+	<update id="numchange" parameterType="user">
+		update car set c_num = #{c_num} where c_id = #{c_id}
+	</update>
+	<delete id="clearcar" parameterType="buys">
+		delete from car where c_id = ${id}
+	</delete>
+	<insert id="addcar" parameterType="user">
+		insert into car (user_id, b_id, c_num, l_id) 
+				value(#{user_id}, #{id}, #{num}, 0)
+	</insert>
+	<update id="updatecar" parameterType="user">
+		update car set c_num = #{num} where b_id = #{id} and user_id = #{user_id}
+	</update>
+	<insert id="addlist" parameterType="user">
+		insert into list (user_id, l_price, l_time) 
+				value(#{user_id}, #{allprice}, #{format})
+	</insert>
+	<update id="addlist_money" parameterType="user">
+		update user set user_money = user_money - #{price} where user_id = #{user_id}
+	</update>
+	<select id="findlist" parameterType="user" resultType="user">
+		select * from list where user_id = #{user_id} and l_price = #{allprice} and l_time = #{format}
+	</select>
+	<update id="carlist" parameterType="user">
+		update car set l_id = #{l_id} where user_id = #{user_id} and c_id = #{str}
+	</update>
+	<select id="findmylist" parameterType="user" resultType="user">
+		select * from list,buy,car where list.user_id = #{user_id} and car.l_id = list.l_id and car.b_id = buy.b_id order by list.l_time desc
+	</select>
+	<update id="recharge" parameterType="user">
+		update user set user_money = #{recharge} where user_id = #{user_id}
+	</update>
+</mapper>
