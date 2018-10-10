@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.core.dao.BuyDao">
+	<!-- 根据id查询客户信息 -->
+	<select id="findBuy1" parameterType="buys" resultType="buys">
+		select * from buy,user where b_type = #{b_type} and buy.u_id = user.user_id
+		<if test="start != null and rows != null">
+			limit #{start},#{rows}
+		</if>
+	</select>
+	<select id="findBuy1Count" parameterType="buys" resultType="Integer">
+		select count(*) from buy,user where b_type = #{b_type} and buy.u_id = user.user_id
+	</select>
+	<select id="findBuy2" parameterType="buys" resultType="buys">
+		select * from buy,user where b_name like #{b_name} and buy.u_id = user.user_id
+		<if test="start != null and rows != null">
+			limit #{start},#{rows}
+		</if>
+	</select>
+	<select id="findBuy2Count" parameterType="buys" resultType="Integer">
+		select count(*) from buy,user where b_name like #{b_name} and buy.u_id = user.user_id
+	</select>
+	<select id="findBuy3" parameterType="buys" resultType="buys">
+		select * from buy,user where b_type = #{b_type} and b_name like #{b_name} and buy.u_id = user.user_id
+		<if test="start != null and rows != null">
+			limit #{start},#{rows}
+		</if>
+	</select>
+	<select id="findBuy3Count" parameterType="buys" resultType="Integer">
+		select count(*) from buy,user where b_type = #{b_type} and b_name like #{b_name} and buy.u_id = user.user_id
+	</select>
+	<select id="findBuyCount" parameterType="Integer" resultType="buys">
+		select count(*) from buy,user where b_type = #{b_type} and buy.u_id = user.user_id
+	</select>
+	<insert id="addsell" parameterType="buys">
+		insert into buy (b_name, b_sell, b_text, b_type, u_id, b_img) 
+				value(#{b_name}, #{b_sell}, #{b_text}, #{type}, #{user_id}, #{bimg})
+	</insert>
+	<delete id="delete" parameterType="buys">
+		delete from buy where b_id = ${bid}
+	</delete>
+	<update id="change" parameterType="buys">
+		update buy set b_name = #{b_name}, b_type = #{option}, b_sell = #{b_sell}, b_text = #{b_text}, b_img = #{path} where b_id = #{b_id}
+	</update>
+</mapper>
